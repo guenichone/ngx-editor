@@ -27,14 +27,14 @@ export class NgxEditorToolbarComponent implements OnInit {
   updloadPercentage = 0;
   /** set to true when the image is being uploaded */
   isUploading = false;
-  /** which tab to active for color insetion */
-  selectedColorTab = 'textColor';
   /** font family name */
-  fontName = '';
+  fontName = 'Arial';
   /** font size */
-  fontSize = '';
+  fontSizeList = [[2, 'Small'], [3, 'Medium'], [5, 'Large'], [6, 'Extra-Large']];
+  fontSize = 'Medium';
   /** hex color code */
   hexColor = '';
+  colorToggle = false;
   /** show/hide image uploader */
   isImageUploader = false;
 
@@ -46,6 +46,7 @@ export class NgxEditorToolbarComponent implements OnInit {
   @ViewChild('imagePopover') imagePopover;
   @ViewChild('videoPopover') videoPopover;
   @ViewChild('fontSizePopover') fontSizePopover;
+  @ViewChild('fontNamePopover') fontNamePopover;
   @ViewChild('colorPopover') colorPopover;
   /**
    * Emits an event when a toolbar button is clicked
@@ -56,6 +57,7 @@ export class NgxEditorToolbarComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private _messageService: MessageService,
     private _commandExecutorService: CommandExecutorService) {
+
     this._popOverConfig.outsideClick = true;
     this._popOverConfig.placement = 'bottom';
     this._popOverConfig.container = 'body';
@@ -66,8 +68,8 @@ export class NgxEditorToolbarComponent implements OnInit {
    *
    * @param value name of the toolbar buttons
    */
-  canEnableToolbarOptions(value): boolean {
-    return Utils.canEnableToolbarOptions(value, this.config['toolbar']);
+  canEnableToolbarOptions(value, toolbar): boolean {
+    return Utils.canEnableToolbarOptions(value, toolbar);
   }
 
   /**
@@ -86,7 +88,6 @@ export class NgxEditorToolbarComponent implements OnInit {
 
     this.urlForm = this._formBuilder.group({
       urlLink: ['', [Validators.required]],
-      urlText: ['', [Validators.required]],
       urlNewTab: [true]
     });
 
@@ -211,16 +212,15 @@ export class NgxEditorToolbarComponent implements OnInit {
     return;
   }
 
-  /** inser text/background color */
+  /** insert text/background color */
   insertColor(color: string, where: string): void {
 
     try {
-      this._commandExecutorService.insertColor(color, where);
+      this._commandExecutorService.executeWithRestore('foreColor', color);
     } catch (error) {
       this._messageService.sendMessage(error.message);
     }
 
-    this.colorPopover.hide();
     return;
   }
 
@@ -228,12 +228,11 @@ export class NgxEditorToolbarComponent implements OnInit {
   setFontSize(fontSize: string): void {
 
     try {
-      this._commandExecutorService.setFontSize(fontSize);
+      this._commandExecutorService.executeWithRestore('fontSize', fontSize);
     } catch (error) {
       this._messageService.sendMessage(error.message);
     }
 
-    this.fontSizePopover.hide();
     return;
   }
 
@@ -241,12 +240,11 @@ export class NgxEditorToolbarComponent implements OnInit {
   setFontName(fontName: string): void {
 
     try {
-      this._commandExecutorService.setFontName(fontName);
+      this._commandExecutorService.executeWithRestore('fontName', fontName);
     } catch (error) {
       this._messageService.sendMessage(error.message);
     }
 
-    this.fontSizePopover.hide();
     return;
   }
 

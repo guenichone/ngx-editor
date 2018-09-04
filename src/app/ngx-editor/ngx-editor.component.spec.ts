@@ -5,9 +5,10 @@ import { NgxEditorComponent } from './ngx-editor.component';
 import { NgxGrippieComponent } from './ngx-grippie/ngx-grippie.component';
 import { NgxEditorToolbarComponent } from './ngx-editor-toolbar/ngx-editor-toolbar.component';
 import { NgxEditorMessageComponent } from './ngx-editor-message/ngx-editor-message.component';
-import { PopoverModule } from 'ngx-bootstrap';
+import { BsDropdownModule, PopoverModule } from 'ngx-bootstrap';
 import { MessageService } from './common/services/message.service';
 import { CommandExecutorService } from './common/services/command-executor.service';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 describe('NgxEditorComponent', () => {
   let component: NgxEditorComponent;
@@ -15,7 +16,7 @@ describe('NgxEditorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, PopoverModule.forRoot(), HttpClientModule],
+      imports: [FormsModule, ReactiveFormsModule, ColorPickerModule, PopoverModule.forRoot(), BsDropdownModule.forRoot(), HttpClientModule],
       providers: [MessageService, CommandExecutorService],
       declarations: [NgxEditorComponent,
         NgxGrippieComponent,

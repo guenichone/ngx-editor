@@ -20,8 +20,17 @@ export class AppComponent implements OnInit, OnDestroy {
     spellcheck: false,
     height: '10rem',
     minHeight: '5rem',
-    placeholder: 'Type something. Test the Editor... ヽ(^。^)丿',
-    translate: 'no'
+    // TODO Fixme under IE
+    // placeholder: 'Type something. Test the Editor... ヽ(^。^)丿'
+    placeholder: '',
+    translate: 'no',
+    fontNameList: ['Arial', 'Verdana'],
+    toolbar: [
+      ['bold', 'italic', 'underline'],
+      ['fontName', 'fontSize', 'color'],
+      ['unorderedList'],
+      ['link', 'unlink']
+    ]
   };
 
   htmlContent = '';

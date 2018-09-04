@@ -19,7 +19,7 @@ export class CommandExecutorService {
    *
    * @param command command to be executed
    */
-  execute(command: string): void {
+  execute(command: string, value: string = null): void {
 
     if (!this.savedSelection && command !== 'enableObjectResizing') {
       throw new Error('Range out of Editor');
@@ -40,8 +40,21 @@ export class CommandExecutorService {
       return;
     }
 
-    document.execCommand(command, false, null);
+    console.log('execCommand', command, value);
+    document.execCommand(command, false, value);
     return;
+  }
+
+  executeWithRestore(command: string, value: string) {
+    if (this.savedSelection) {
+      const restored = Utils.restoreSelection(this.savedSelection);
+      if (restored && this.checkSelection()) {
+        document.execCommand(command, false, value);
+      }
+
+    } else {
+      throw new Error('Range out of the editor');
+    }
   }
 
   /**
@@ -67,10 +80,10 @@ export class CommandExecutorService {
   }
 
   /**
- * inserts image in the editor
- *
- * @param videParams url of the image to be inserted
- */
+   * inserts image in the editor
+   *
+   * @param videParams url of the image to be inserted
+   */
   insertVideo(videParams: any): void {
     if (this.savedSelection) {
       if (videParams) {
@@ -161,7 +174,7 @@ export class CommandExecutorService {
        * check whether the saved selection contains a range or plain selection
        */
       if (params.urlNewTab) {
-        const newUrl = '<a href="' + params.urlLink + '" target="_blank">' + params.urlText + '</a>';
+        const newUrl = '<a href="' + params.urlLink + '" target="_blank">' + this.savedSelection + '</a>';
 
         if (document.getSelection().type !== 'Range') {
           const restored = Utils.restoreSelection(this.savedSelection);
@@ -184,133 +197,82 @@ export class CommandExecutorService {
     return;
   }
 
-  /**
-   * insert color either font or background
-   *
-   * @param color color to be inserted
-   * @param where where the color has to be inserted either text/background
-   */
-  insertColor(color: string, where: string): void {
-
-    if (this.savedSelection) {
-      const restored = Utils.restoreSelection(this.savedSelection);
-      if (restored && this.checkSelection()) {
-        if (where === 'textColor') {
-          document.execCommand('foreColor', false, color);
-        } else {
-          document.execCommand('hiliteColor', false, color);
-        }
-      }
-
-    } else {
-      throw new Error('Range out of the editor');
-    }
-
-    return;
-  }
-
-  /**
-   * set font size for text
-   *
-   * @param fontSize font-size to be set
-   */
-  setFontSize(fontSize: string): void {
-
-    if (this.savedSelection && this.checkSelection()) {
-      const deletedValue = this.deleteAndGetElement();
-
-      if (deletedValue) {
-
-        const restored = Utils.restoreSelection(this.savedSelection);
-
-        if (restored) {
-          if (this.isNumeric(fontSize)) {
-            const fontPx = '<span style="font-size: ' + fontSize + 'px;">' + deletedValue + '</span>';
-            this.insertHtml(fontPx);
-          } else {
-            const fontPx = '<span style="font-size: ' + fontSize + ';">' + deletedValue + '</span>';
-            this.insertHtml(fontPx);
-          }
-        }
-      }
-
-    } else {
-      throw new Error('Range out of the editor');
-    }
-  }
-
-  /**
-   * set font name/family for text
-   *
-   * @param fontName font-family to be set
-   */
-  setFontName(fontName: string): void {
-
-    if (this.savedSelection && this.checkSelection()) {
-      const deletedValue = this.deleteAndGetElement();
-
-      if (deletedValue) {
-
-        const restored = Utils.restoreSelection(this.savedSelection);
-
-        if (restored) {
-          if (this.isNumeric(fontName)) {
-            const fontFamily = '<span style="font-family: ' + fontName + 'px;">' + deletedValue + '</span>';
-            this.insertHtml(fontFamily);
-          } else {
-            const fontFamily = '<span style="font-family: ' + fontName + ';">' + deletedValue + '</span>';
-            this.insertHtml(fontFamily);
-          }
-        }
-      }
-
-    } else {
-      throw new Error('Range out of the editor');
-    }
-  }
-
   /** insert HTML */
   private insertHtml(html: string): void {
 
-    const isHTMLInserted = document.execCommand('insertHTML', false, html);
-
-    if (!isHTMLInserted) {
-      throw new Error('Unable to perform the operation');
-    }
+    this.pasteHtmlAtCaret(html, true);
 
     return;
   }
 
-  /**
-   * check whether the value is a number or string
-   * if number return true
-   * else return false
-   */
-  private isNumeric(value: any): boolean {
-    return /^-{0,1}\d+$/.test(value);
-  }
+  // Cf : https://stackoverflow.com/questions/6690752/insert-html-at-caret-in-a-contenteditable-div
+  private pasteHtmlAtCaret(html, selectPastedContent) {
+    let sel, range;
+    if (window.getSelection) {
+      console.log('in IE9 and non-IE');
 
-  /** delete the text at selected range and return the value */
-  private deleteAndGetElement(): any {
+      // IE9 and non-IE
+      sel = window.getSelection();
+      console.log('selection : ', sel);
 
-    let slectedText;
+      if (sel.getRangeAt && sel.rangeCount) {
+        range = sel.getRangeAt(0);
+        range.deleteContents();
 
-    if (this.savedSelection) {
-      slectedText = this.savedSelection.toString();
-      this.savedSelection.deleteContents();
-      return slectedText;
+        // Range.createContextualFragment() would be useful here but is
+        // only relatively recently standardized and is not supported in
+        // some browsers (IE9, for one)
+        const el = document.createElement('div');
+        el.innerHTML = html;
+        const frag = document.createDocumentFragment();
+        let node, lastNode;
+        while ((node = el.firstChild)) {
+          lastNode = frag.appendChild(node);
+        }
+
+        const firstNode = frag.firstChild;
+        range.insertNode(frag);
+
+        // Preserve the selection
+        if (lastNode) {
+          range = range.cloneRange();
+          range.setStartAfter(lastNode);
+          if (selectPastedContent) {
+            range.setStartBefore(firstNode);
+          } else {
+            range.collapse(true);
+          }
+          sel.removeAllRanges();
+          sel.addRange(range);
+        }
+      }
+    } else if ((sel = document.getSelection()) && sel.type !== 'Control') {
+      console.log('in IE < 9');
+
+      // IE < 9
+      const originalRange = sel.createRange();
+
+      console.log('selection : ', sel);
+
+      originalRange.collapse(true);
+      sel.createRange().pasteHTML(html);
+
+      if (selectPastedContent) {
+        range = sel.createRange();
+        range.setEndPoint('StartToStart', originalRange);
+        range.select();
+      }
+    } else {
+      throw new Error('Unable to perform the operation');
     }
-
-    return false;
-
   }
 
-  /** check any slection is made or not */
+  /** check any selection is made or not */
   private checkSelection(): any {
 
-    const slectedText = this.savedSelection.toString();
+    const selectedText = this.savedSelection.toString();
 
-    if (slectedText.length === 0) {
+    if (selectedText.length === 0) {
       throw new Error('No Selection Made');
     }
 
