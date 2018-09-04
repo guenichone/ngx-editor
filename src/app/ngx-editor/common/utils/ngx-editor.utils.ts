@@ -12,11 +12,9 @@ export function canEnableToolbarOptions(value: string, toolbar: any): boolean {
             return true;
         } else {
 
-            const found = toolbar.filter(array => {
-                return array.indexOf(value) !== -1;
-            });
+            const found = toolbar.find(v => v === value);
 
-            return found.length ? true : false;
+            return !!found;
         }
     } else {
         return false;
