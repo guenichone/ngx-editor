@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpRequest } from '@angular/common/http';
 import * as Utils from '../utils/ngx-editor.utils';
@@ -12,7 +13,7 @@ export class CommandExecutorService {
    *
    * @param _http HTTP Client for making http requests
    */
-  constructor(private _http: HttpClient) { }
+  constructor(private _http: HttpClient, private datePipe: DatePipe) { }
 
   /**
    * executes command from the toolbar
@@ -194,6 +195,15 @@ export class CommandExecutorService {
     }
 
     return;
+  }
+
+  /**
+   * Insert date time in editor
+   */
+  insertDateTime(dateOnly = false): void {
+    const date = new Date();
+    const format = dateOnly ? 'dd/MM/yyyy' : 'dd/MM/yyyy HH\'h\'MM';
+    this.insertHtml(this.datePipe.transform(date, format));
   }
 
   /** insert HTML */

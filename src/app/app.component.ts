@@ -29,7 +29,8 @@ export class AppComponent implements OnInit, OnDestroy {
       ['bold', 'italic', 'underline'],
       ['fontName', 'fontSize', 'color'],
       ['unorderedList'],
-      ['link', 'unlink']
+      ['link', 'unlink'],
+      ['insertDateTime', 'insertDate']
     ]
   };
 

@@ -114,6 +114,19 @@ export class NgxEditorToolbarComponent implements OnInit {
   }
 
   /**
+   * Insert time in the editor
+   */
+  insertDateTime(dateOnly = false): void {
+
+    try {
+      this._commandExecutorService.insertDateTime(dateOnly);
+    } catch (error) {
+      this._messageService.sendMessage(error.message);
+    }
+
+  }
+
+  /**
    * create insert image form
    */
   buildImageForm(): void {

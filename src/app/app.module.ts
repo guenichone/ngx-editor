@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
@@ -7,16 +8,14 @@ import { AppComponent } from './app.component';
 import { NgxEditorModule } from './ngx-editor/ngx-editor.module';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
     NgxEditorModule,
     FormsModule
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

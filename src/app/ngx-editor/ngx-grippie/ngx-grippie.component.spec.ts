@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ElementRef, Renderer2 } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
@@ -18,6 +19,7 @@ describe('NgxGrippieComponent', () => {
         NgxEditorComponent,
         MessageService,
         CommandExecutorService,
+        DatePipe,
         { provide: ElementRef, useValue: this.elementRef },
         { provide: Renderer2, useValue: this.renderer }
       ]

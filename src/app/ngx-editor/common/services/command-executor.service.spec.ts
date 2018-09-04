@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { TestBed, inject } from '@angular/core/testing';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -8,7 +9,7 @@ describe('CommandExecutorService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule],
-      providers: [CommandExecutorService, MessageService]
+      providers: [CommandExecutorService, MessageService, DatePipe]
     });
   });
 

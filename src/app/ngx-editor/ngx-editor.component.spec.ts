@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -17,7 +18,7 @@ describe('NgxEditorComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, ColorPickerModule, PopoverModule.forRoot(), BsDropdownModule.forRoot(), HttpClientModule],
-      providers: [MessageService, CommandExecutorService],
+      providers: [MessageService, CommandExecutorService, DatePipe],
       declarations: [NgxEditorComponent,
         NgxGrippieComponent,
         NgxEditorToolbarComponent,

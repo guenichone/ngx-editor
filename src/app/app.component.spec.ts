@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { TestBed, async } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
@@ -13,6 +14,9 @@ describe('AppComponent', () => {
       declarations: [
         AppComponent
       ],
+      providers: [
+        DatePipe
+      ]
     }).compileComponents();
   }));
 

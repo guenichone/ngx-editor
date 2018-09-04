@@ -84,6 +84,16 @@
       <i class="fa fa-tint" aria-hidden="true"></i>
     </button>
 
+    <button type="button" class="ngx-editor-button" *ngIf="canEnableToolbarOptions('insertDate', toolbar)" (click)="insertDateTime(true)"
+            title="Insert date" [disabled]="!config['enableToolbar']">
+      <i class="fa fa-calendar" aria-hidden="true"></i>
+    </button>
+
+    <button type="button" class="ngx-editor-button" *ngIf="canEnableToolbarOptions('insertDateTime', toolbar)" (click)="insertDateTime()"
+            title="Insert date and time" [disabled]="!config['enableToolbar']">
+      <i class="fa fa-clock-o" aria-hidden="true"></i>
+    </button>
+
     <button type="button" class="ngx-editor-button" *ngIf="canEnableToolbarOptions('justifyLeft', toolbar)" (click)="triggerCommand('justifyLeft')"
       title="Justify Left" [disabled]="!config['enableToolbar']">
       <i class="fa fa-align-left" aria-hidden="true"></i>
