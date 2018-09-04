@@ -40,7 +40,6 @@ export class CommandExecutorService {
       return;
     }
 
-    console.log('execCommand', command, value);
     document.execCommand(command, false, value);
     return;
   }
@@ -49,7 +48,7 @@ export class CommandExecutorService {
     if (this.savedSelection) {
       const restored = Utils.restoreSelection(this.savedSelection);
       if (restored && this.checkSelection()) {
-        document.execCommand(command, false, value);
+        this.execute(command, value);
       }
 
     } else {
@@ -209,11 +208,9 @@ export class CommandExecutorService {
   private pasteHtmlAtCaret(html, selectPastedContent) {
     let sel, range;
     if (window.getSelection) {
-      console.log('in IE9 and non-IE');
 
       // IE9 and non-IE
       sel = window.getSelection();
-      console.log('selection : ', sel);
 
       if (sel.getRangeAt && sel.rangeCount) {
         range = sel.getRangeAt(0);
@@ -247,12 +244,8 @@ export class CommandExecutorService {
         }
       }
     } else if ((sel = document.getSelection()) && sel.type !== 'Control') {
-      console.log('in IE < 9');
-
       // IE < 9
       const originalRange = sel.createRange();
-
-      console.log('selection : ', sel);
 
       originalRange.collapse(true);
       sel.createRange().pasteHTML(html);
