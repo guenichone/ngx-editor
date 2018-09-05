@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BsDropdownModule, PopoverModule } from 'ngx-bootstrap';
@@ -15,7 +15,7 @@ import { CommandExecutorService } from './common/services/command-executor.servi
   imports: [CommonModule, FormsModule, ReactiveFormsModule, ColorPickerModule, PopoverModule.forRoot(), BsDropdownModule.forRoot()],
   declarations: [NgxEditorComponent, NgxGrippieComponent, NgxEditorMessageComponent, NgxEditorToolbarComponent],
   exports: [NgxEditorComponent, PopoverModule],
-  providers: [CommandExecutorService, MessageService]
+  providers: [CommandExecutorService, MessageService, DatePipe]
 })
 
 export class NgxEditorModule { }

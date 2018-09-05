@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
@@ -15,7 +14,7 @@ import { NgxEditorModule } from './ngx-editor/ngx-editor.module';
     NgxEditorModule,
     FormsModule
   ],
-  providers: [DatePipe],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
