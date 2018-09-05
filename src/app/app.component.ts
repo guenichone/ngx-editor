@@ -25,6 +25,8 @@ export class AppComponent implements OnInit, OnDestroy {
     placeholder: '',
     translate: 'no',
     fontNameList: ['Arial', 'Verdana'],
+    // insertDateFormat: 'ddMMyyyy',
+    // insertDateTimeFormat: 'yyyyMMdddd',
     toolbar: [
       ['bold', 'italic', 'underline'],
       ['fontName', 'fontSize', 'color'],

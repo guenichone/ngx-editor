@@ -200,9 +200,9 @@ export class CommandExecutorService {
   /**
    * Insert date time in editor
    */
-  insertDateTime(dateOnly = false): void {
+  insertDateTime(dateOnly = false, dateFormat =  'dd/MM/yyyy', dateTimeFormat = 'dd/MM/yyyy HH\'h\'MM'): void {
     const date = new Date();
-    const format = dateOnly ? 'dd/MM/yyyy' : 'dd/MM/yyyy HH\'h\'MM';
+    const format = dateOnly ? dateFormat : dateTimeFormat;
     this.insertHtml(this.datePipe.transform(date, format));
   }
 

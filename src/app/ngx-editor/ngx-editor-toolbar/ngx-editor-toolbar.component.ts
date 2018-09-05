@@ -119,7 +119,7 @@ export class NgxEditorToolbarComponent implements OnInit {
   insertDateTime(dateOnly = false): void {
 
     try {
-      this._commandExecutorService.insertDateTime(dateOnly);
+      this._commandExecutorService.insertDateTime(dateOnly, this.config['insertDateFormat'], this.config['insertDateTimeFormat']);
     } catch (error) {
       this._messageService.sendMessage(error.message);
     }
